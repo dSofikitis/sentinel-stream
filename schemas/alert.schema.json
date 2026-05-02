@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentinel-stream.dev/schemas/alert.schema.json",
+  "title": "Alert",
+  "description": "An alert produced by the detector. Either a Sigma-rule match or an anomaly score from the ML model.",
+  "type": "object",
+  "required": [
+    "alert_id",
+    "tenant_id",
+    "ts",
+    "kind",
+    "severity",
+    "detector_version",
+    "event_id"
+  ],
+  "properties": {
+    "alert_id": { "type": "string", "minLength": 1 },
+    "tenant_id": { "type": "string" },
+    "ts": { "type": "string", "format": "date-time" },
+    "kind": {
+      "type": "string",
+      "enum": ["sigma", "anomaly"],
+      "description": "Which detection layer fired."
+    },
+    "rule_id": {
+      "type": ["string", "null"],
+      "description": "Sigma rule id; required when kind = 'sigma'."
+    },
+    "rule_title": { "type": ["string", "null"] },
+    "model": {
+      "type": ["string", "null"],
+      "description": "Model name, e.g. 'isolation-forest-v1'; required when kind = 'anomaly'."
+    },
+    "score": {
+      "type": ["number", "null"],
+      "description": "Anomaly score in [0, 1] when kind = 'anomaly'."
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["info", "low", "medium", "high", "critical"]
+    },
+    "event_id": {
+      "type": "string",
+      "description": "Source event_id this alert refers to (for join-back)."
+    },
+    "message": { "type": ["string", "null"] },
+    "detector_version": { "type": "string" }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "kind": { "const": "sigma" } } },
+      "then": { "required": ["rule_id"] }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "anomaly" } } },
+      "then": { "required": ["model", "score"] }
+    }
+  ]
+}
