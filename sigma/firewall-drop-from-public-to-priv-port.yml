@@ -1,0 +1,11 @@
+title: Firewall drop from public source to privileged port
+id: fw_drop_public_to_priv_port
+description: Inbound TCP from a public source IP to a privileged port (<1024) that the firewall dropped. A signal of probing.
+status: experimental
+level: medium
+detection:
+  selection:
+    event_class: network
+    action: drop
+    dst_port|lte: 1023
+  condition: selection

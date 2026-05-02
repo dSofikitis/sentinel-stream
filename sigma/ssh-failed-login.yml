@@ -1,0 +1,11 @@
+title: SSH login failure
+id: ssh_login_failure
+description: A failed SSH authentication. Useful as a building block for brute-force aggregations downstream.
+status: experimental
+level: low
+detection:
+  selection:
+    event_class: auth
+    outcome: failure
+    service: ssh
+  condition: selection
