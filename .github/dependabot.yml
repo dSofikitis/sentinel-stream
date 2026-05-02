@@ -1,0 +1,68 @@
+version: 2
+
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels: [infra]
+
+  - package-ecosystem: pip
+    directory: "/services/generator"
+    schedule:
+      interval: weekly
+    labels: [generator]
+
+  - package-ecosystem: pip
+    directory: "/services/detector"
+    schedule:
+      interval: weekly
+    labels: [detector]
+
+  - package-ecosystem: gomod
+    directory: "/services/ingest"
+    schedule:
+      interval: weekly
+    labels: [ingest]
+
+  - package-ecosystem: gomod
+    directory: "/services/sink"
+    schedule:
+      interval: weekly
+    labels: [sink]
+
+  - package-ecosystem: cargo
+    directory: "/services/parser"
+    schedule:
+      interval: weekly
+    labels: [parser]
+
+  - package-ecosystem: docker
+    directory: "/services/ingest"
+    schedule:
+      interval: weekly
+    labels: [infra, ingest]
+
+  - package-ecosystem: docker
+    directory: "/services/sink"
+    schedule:
+      interval: weekly
+    labels: [infra, sink]
+
+  - package-ecosystem: docker
+    directory: "/services/parser"
+    schedule:
+      interval: weekly
+    labels: [infra, parser]
+
+  - package-ecosystem: docker
+    directory: "/services/generator"
+    schedule:
+      interval: weekly
+    labels: [infra, generator]
+
+  - package-ecosystem: docker
+    directory: "/services/detector"
+    schedule:
+      interval: weekly
+    labels: [infra, detector]
