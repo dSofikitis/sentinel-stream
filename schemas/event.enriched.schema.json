@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentinel-stream.dev/schemas/event.enriched.schema.json",
+  "title": "EnrichedEvent",
+  "description": "An event after the parser has normalized timestamps, extracted entities, and applied enrichments (GeoIP, classification).",
+  "type": "object",
+  "required": [
+    "event_id",
+    "tenant_id",
+    "source",
+    "received_at",
+    "ts",
+    "event_class",
+    "severity",
+    "parser_version"
+  ],
+  "properties": {
+    "event_id": { "type": "string", "minLength": 1 },
+    "tenant_id": { "type": "string" },
+    "source": { "type": "string" },
+    "received_at": { "type": "string", "format": "date-time" },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Authoritative event timestamp parsed from the raw payload."
+    },
+    "event_class": {
+      "type": "string",
+      "enum": ["auth", "network", "dns", "process", "file", "other"]
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["debug", "info", "notice", "warning", "error", "critical", "alert", "emergency"]
+    },
+    "host": { "type": ["string", "null"] },
+    "user": { "type": ["string", "null"] },
+    "src_ip": { "type": ["string", "null"], "format": "ipv4" },
+    "dst_ip": { "type": ["string", "null"], "format": "ipv4" },
+    "src_port": { "type": ["integer", "null"], "minimum": 0, "maximum": 65535 },
+    "dst_port": { "type": ["integer", "null"], "minimum": 0, "maximum": 65535 },
+    "geo": {
+      "type": ["object", "null"],
+      "properties": {
+        "country_code": { "type": "string", "minLength": 2, "maxLength": 2 },
+        "city": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "message": { "type": ["string", "null"] },
+    "parser_version": { "type": "string" }
+  },
+  "additionalProperties": false
+}
