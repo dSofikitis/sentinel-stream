@@ -64,6 +64,17 @@ services:
       timeout: 5s
       retries: 30
 
+  generator:
+    build:
+      context: ../../services/generator
+    image: sentinel-stream/generator:dev
+    profiles: ["tools"]
+    depends_on:
+      redpanda-init:
+        condition: service_completed_successfully
+    environment:
+      INGEST_URL: http://ingest:8080/events
+
   grafana:
     image: grafana/grafana:11.2.0
     container_name: ss-grafana
