@@ -64,14 +64,28 @@ services:
       timeout: 5s
       retries: 30
 
+  ingest:
+    build:
+      context: ../../services/ingest
+    image: sentinel-stream/ingest:dev
+    container_name: ss-ingest
+    depends_on:
+      redpanda-init:
+        condition: service_completed_successfully
+    environment:
+      INGEST_ADDR: ":8080"
+      INGEST_NODE_ID: ingest-1
+    ports:
+      - "8080:8080"
+
   generator:
     build:
       context: ../../services/generator
     image: sentinel-stream/generator:dev
     profiles: ["tools"]
     depends_on:
-      redpanda-init:
-        condition: service_completed_successfully
+      ingest:
+        condition: service_started
     environment:
       INGEST_URL: http://ingest:8080/events
 
