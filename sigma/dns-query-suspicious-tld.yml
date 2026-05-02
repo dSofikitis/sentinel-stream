@@ -1,0 +1,13 @@
+title: DNS query for suspicious TLD
+id: dns_query_suspicious_tld
+description: DNS A-record lookup for a domain ending in a TLD frequently abused by malware. Cheap, noisy, but a useful starting point for tuning.
+status: experimental
+level: low
+detection:
+  selection:
+    event_class: dns
+    query|endswith:
+      - .zip
+      - .top
+      - .xyz
+  condition: selection
