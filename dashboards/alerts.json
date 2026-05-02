@@ -1,0 +1,124 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Alerts (24h)",
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "sentinel-clickhouse" },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "", "values": false }, "colorMode": "value", "graphMode": "none" },
+      "targets": [
+        {
+          "refId": "A",
+          "format": 0,
+          "rawSql": "SELECT count() FROM sentinel.alerts WHERE ts > now() - INTERVAL 24 HOUR"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Sigma vs anomaly (24h)",
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "sentinel-clickhouse" },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "", "values": true }, "colorMode": "value", "graphMode": "none" },
+      "targets": [
+        {
+          "refId": "A",
+          "format": 2,
+          "rawSql": "SELECT kind, count() AS c FROM sentinel.alerts WHERE ts > now() - INTERVAL 24 HOUR GROUP BY kind"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Distinct firing rules (24h)",
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "sentinel-clickhouse" },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "", "values": false }, "colorMode": "value", "graphMode": "none" },
+      "targets": [
+        {
+          "refId": "A",
+          "format": 0,
+          "rawSql": "SELECT uniqExact(rule_id) FROM sentinel.alerts WHERE kind = 'sigma' AND ts > now() - INTERVAL 24 HOUR"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "High/critical (24h)",
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "sentinel-clickhouse" },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "options": { "reduceOptions": { "calcs": ["last"], "fields": "", "values": false }, "colorMode": "value", "graphMode": "none" },
+      "targets": [
+        {
+          "refId": "A",
+          "format": 0,
+          "rawSql": "SELECT count() FROM sentinel.alerts WHERE ts > now() - INTERVAL 24 HOUR AND severity IN ('high', 'critical')"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Alerts per minute by kind",
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "sentinel-clickhouse" },
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 4 },
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "bars" } }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "format": 1,
+          "rawSql": "SELECT toStartOfMinute(ts) AS t, kind, count() AS c FROM sentinel.alerts WHERE ts >= $__fromTime AND ts <= $__toTime GROUP BY t, kind ORDER BY t"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "table",
+      "title": "Top firing rules (24h)",
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "sentinel-clickhouse" },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 13 },
+      "targets": [
+        {
+          "refId": "A",
+          "format": 2,
+          "rawSql": "SELECT rule_id, rule_title, severity, count() AS fires FROM sentinel.alerts WHERE kind = 'sigma' AND ts > now() - INTERVAL 24 HOUR GROUP BY rule_id, rule_title, severity ORDER BY fires DESC LIMIT 20"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "table",
+      "title": "Recent 50 alerts",
+      "datasource": { "type": "grafana-clickhouse-datasource", "uid": "sentinel-clickhouse" },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 13 },
+      "targets": [
+        {
+          "refId": "A",
+          "format": 2,
+          "rawSql": "SELECT ts, severity, kind, COALESCE(rule_id, model) AS detector, message, event_id FROM sentinel.alerts ORDER BY ts DESC LIMIT 50"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["sentinel-stream"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "SentinelStream — Alerts",
+  "uid": "ss-alerts",
+  "version": 1,
+  "weekStart": ""
+}
