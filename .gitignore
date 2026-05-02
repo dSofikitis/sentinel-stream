@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+.env
+.env.*
+!.env.example
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Go
+/services/*/bin/
+/services/*/dist/
+*.test
+*.out
+
+# Rust
+target/
+**/*.rs.bk
+Cargo.lock.bak
+
+# Editors
+.vscode/
+.idea/
+
+# Node (if/when UI lands)
+node_modules/
+dist/

@@ -1,0 +1,14 @@
+[package]
+name = "sentinel-parser"
+version = "0.1.0"
+edition = "2021"
+description = "SentinelStream parser/enricher service."
+license = "MIT"
+
+[[bin]]
+name = "sentinel-parser"
+path = "src/main.rs"
+
+[dependencies]
+
+[dev-dependencies]
