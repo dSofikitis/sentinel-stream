@@ -1,0 +1,30 @@
+- name: bug
+  color: d73a4a
+  description: Something is not working
+- name: enhancement
+  color: a2eeef
+  description: New feature or request
+- name: security
+  color: b60205
+  description: Detection logic or threat-model change
+- name: data
+  color: 0366d6
+  description: Schema / topic / corpus change
+- name: infra
+  color: 5319e7
+  description: CI/CD, Compose, or deploy change
+- name: ingest
+  color: fbca04
+  description: services/ingest
+- name: parser
+  color: fbca04
+  description: services/parser
+- name: detector
+  color: fbca04
+  description: services/detector
+- name: sink
+  color: fbca04
+  description: services/sink
+- name: generator
+  color: fbca04
+  description: services/generator
