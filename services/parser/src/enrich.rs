@@ -124,9 +124,7 @@ fn severity(raw: &Value) -> Severity {
 }
 
 fn string_field(raw: &Value, key: &str) -> Option<String> {
-    raw.get(key)
-        .and_then(Value::as_str)
-        .map(|s| s.to_string())
+    raw.get(key).and_then(Value::as_str).map(|s| s.to_string())
 }
 
 fn u16_field(raw: &Value, key: &str) -> Option<u16> {
