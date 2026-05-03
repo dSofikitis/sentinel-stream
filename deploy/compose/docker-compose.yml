@@ -96,6 +96,21 @@ services:
     environment:
       INGEST_URL: http://ingest:8080/events
 
+  demo-seed:
+    build:
+      context: ../..
+      dockerfile: services/demo-seed/Dockerfile
+    image: sentinel-stream/demo-seed:dev
+    profiles: ["tools"]
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    environment:
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_DB: sentinel
+      CLICKHOUSE_USER: sentinel
+      CLICKHOUSE_PASSWORD: sentinel
+
   grafana:
     image: grafana/grafana:11.2.0
     container_name: ss-grafana

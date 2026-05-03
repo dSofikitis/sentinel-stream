@@ -94,6 +94,9 @@ seed: ## post 100 events into the running ingest service via the generator conta
 	docker compose -f deploy/compose/docker-compose.yml --profile tools run --rm generator \
 	  --target http://ingest:8080/events --rate 50 --duration 2 --inject brute_force_ssh
 
+seed-grafana: ## populate ClickHouse with enriched events + alerts so Grafana lights up
+	docker compose -f deploy/compose/docker-compose.yml --profile tools run --rm demo-seed
+
 schema-check: ## validate the JSON Schema files parse cleanly
 	@python -c "import json,sys,glob; [json.load(open(p)) or print('ok',p) for p in sorted(glob.glob('schemas/*.schema.json'))]"
 
