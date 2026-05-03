@@ -1,0 +1,17 @@
+{
+  "tenant_id": "globex",
+  "source": "edge-firewall",
+  "transport": "syslog",
+  "raw": {
+    "@timestamp": "2026-05-03T10:15:10.000Z",
+    "event_class": "network",
+    "action": "drop",
+    "src_ip": "203.0.113.77",
+    "dst_ip": "10.0.0.5",
+    "src_port": 51514,
+    "dst_port": 22,
+    "protocol": "tcp",
+    "severity": "notice",
+    "message": "fw drop"
+  }
+}
