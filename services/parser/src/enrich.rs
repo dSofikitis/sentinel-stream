@@ -34,7 +34,7 @@ pub fn enrich(raw: &RawEvent) -> Result<EnrichedEvent, EnrichError> {
     let event_class = classify(&raw.raw, &raw.source);
     let severity = severity(&raw.raw);
 
-    Ok(EnrichedEvent {
+    Ok(attach_geo_placeholder(EnrichedEvent {
         event_id: raw.event_id.clone(),
         tenant_id: raw.tenant_id.clone(),
         source: raw.source.clone(),
@@ -51,8 +51,7 @@ pub fn enrich(raw: &RawEvent) -> Result<EnrichedEvent, EnrichError> {
         geo: None, // GeoIP enrichment lands in a follow-up phase.
         message: string_field(&raw.raw, "message"),
         parser_version: PARSER_VERSION.to_string(),
-    })
-    .map(attach_geo_placeholder)
+    }))
 }
 
 fn attach_geo_placeholder(mut e: EnrichedEvent) -> EnrichedEvent {
@@ -209,7 +208,7 @@ mod tests {
     fn ts_error_when_neither_parseable() {
         let mut r = raw_event(json!({}));
         r.received_at = "not-a-date".into();
-        assert_eq!(enrich(&r), Err(EnrichError::NoTimestamp));
+        assert!(matches!(enrich(&r), Err(EnrichError::NoTimestamp)));
     }
 
     #[test]
