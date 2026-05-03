@@ -1,3 +1,5 @@
+name: sentinel-stream
+
 services:
   redpanda:
     image: redpandadata/redpanda:latest
@@ -36,6 +38,11 @@ services:
       redpanda:
         condition: service_healthy
     entrypoint: /bin/sh
+    # The redpanda image declares VOLUME /var/lib/redpanda/data; mount
+    # it as tmpfs on this one-shot so docker doesn't create an
+    # anonymous volume per run.
+    tmpfs:
+      - /var/lib/redpanda/data
     command:
       - -c
       - |
