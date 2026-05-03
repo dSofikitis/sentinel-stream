@@ -1,0 +1,15 @@
+{
+  "tenant_id": "initech",
+  "source": "dns-resolver",
+  "transport": "syslog",
+  "raw": {
+    "@timestamp": "2026-05-03T10:15:31.000Z",
+    "event_class": "dns",
+    "query": "cloudflare.com",
+    "qtype": "A",
+    "rcode": "NOERROR",
+    "src_ip": "10.0.0.10",
+    "severity": "debug",
+    "message": "dns query"
+  }
+}

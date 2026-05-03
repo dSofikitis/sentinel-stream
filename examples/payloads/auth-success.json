@@ -1,0 +1,15 @@
+{
+  "tenant_id": "acme",
+  "source": "auth-service",
+  "transport": "http",
+  "raw": {
+    "@timestamp": "2026-05-03T10:14:01.000Z",
+    "event_class": "auth",
+    "outcome": "success",
+    "user": "alice",
+    "host": "api-1",
+    "src_ip": "203.0.113.10",
+    "severity": "info",
+    "message": "User alice logged in"
+  }
+}
