@@ -1,8 +1,8 @@
 """Tiny in-process Sigma matcher.
 
 Real Sigma is a rich detection language with selections, modifiers,
-near/aggregation conditions, and field mappings. The MVP supports the
-subset that covers ~80% of single-event detections:
+near/aggregation conditions, and field mappings. This matcher
+covers the subset that handles ~80% of single-event detections:
 
 - Multiple named ``selection_*`` blocks under ``detection``.
 - Each selection is a flat ``{field: value}`` dict where the value is
@@ -12,8 +12,8 @@ subset that covers ~80% of single-event detections:
 - A ``condition`` of the form ``selection`` or
   ``selection_a and selection_b``.
 
-Anything richer should be handled in a follow-up that wraps pysigma's
-backend pipeline.
+Anything richer can be handled by wrapping pysigma's backend pipeline
+behind the same ``Detector`` API without changing callers.
 """
 
 from __future__ import annotations

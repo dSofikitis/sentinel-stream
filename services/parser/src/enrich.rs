@@ -1,7 +1,8 @@
 //! Enrichment: takes a [`RawEvent`] and produces an [`EnrichedEvent`]
 //! with normalized timestamp, classification, severity, and extracted
-//! entity fields. GeoIP enrichment is out of scope for the MVP and is
-//! filled in by a follow-up commit.
+//! entity fields. The `geo` field is left as an empty placeholder so
+//! downstream consumers can rely on the field's existence; an
+//! MMDB-backed lookup is a one-line addition behind the same API.
 
 use chrono::{DateTime, SecondsFormat, Utc};
 use serde_json::Value;

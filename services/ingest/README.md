@@ -29,11 +29,12 @@ the resulting `RawEvent` to the configured producer.
 
 ## Producer pluggability
 
-`internal/producer.Producer` is the publisher seam. The MVP wires the
-`StdoutProducer` (one JSON line per event, written to stdout) so the
-service is fully functional with no external dependencies. A
-`KafkaProducer` (franz-go against Redpanda) slots in here without
-touching the HTTP path.
+`internal/producer.Producer` is the publisher seam. The default
+build wires the `StdoutProducer` (one JSON line per event, written
+to stdout) so the service runs with no external dependencies — easy
+to compose into a Unix pipe and trivial to test. A `KafkaProducer`
+(franz-go against Redpanda) slots in behind the same interface
+without touching the HTTP path.
 
 ## Run it
 

@@ -4,10 +4,13 @@ The detection brain. Reads `events.enriched` lines from stdin and runs
 two layers in parallel:
 
 - **Sigma rules** (`sigma/` at the repo root) — declarative YAML
-  detections. The MVP ships an in-process matcher that supports
-  flat selections, list-as-OR values, the `contains / startswith /
+  detections via an in-process matcher that supports flat
+  selections, list-as-OR values, the `contains / startswith /
   endswith / gte / lte` modifiers, and `and` / `or` / `not` /
-  per-name conditions. Rich pysigma-backend wiring is a follow-up.
+  per-name conditions. The matcher is intentionally hand-rolled so
+  reviewers can read the whole engine; a pysigma backend can be
+  dropped in behind the same `Detector` API without changing
+  callers.
 - **Isolation Forest** (`scikit-learn`) — fits on a synthetic warmup
   corpus on startup, then scores each enriched event independently.
   Anomalies above `--anomaly-threshold` produce alerts. The model is
@@ -15,8 +18,8 @@ two layers in parallel:
   windowed features later doesn't touch the CLI.
 
 Both layers emit alerts on stdout matching `schemas/alert.schema.json`.
-The Kafka-backed consumer/producer wraps this same evaluation path
-in a follow-up phase.
+The same evaluation path is the unit a Kafka consumer/producer wraps
+when running against the live broker.
 
 ## Run it
 

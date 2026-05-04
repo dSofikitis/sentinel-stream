@@ -1,10 +1,7 @@
 # deploy/compose
 
-The full SentinelStream stack via Docker Compose.
-
-## What's in this commit (phase 2)
-
-Datastores + Grafana wired up; services join in their own phases.
+The full SentinelStream data plane via Docker Compose: broker,
+column store, ingest, and dashboards.
 
 | Service | Image | Ports | Notes |
 |---|---|---|---|
@@ -12,6 +9,9 @@ Datastores + Grafana wired up; services join in their own phases.
 | `redpanda-init` | `redpandadata/redpanda` | — | One-shot job: creates `events.raw`, `events.enriched`, `alerts` topics. |
 | `clickhouse` | `clickhouse/clickhouse-server:24.8` | 8123 (HTTP), 9000 (native) | Schema seeded from `clickhouse/init.sql`. |
 | `grafana` | `grafana/grafana:11.2.0` | 3000 | ClickHouse plugin + datasource provisioned; dashboards mounted from `dashboards/`. |
+| `ingest` | built locally | 8080 | Go HTTP `POST /events` endpoint. |
+| `generator` | built locally (`tools` profile) | — | Synthetic event source; on-demand. |
+| `demo-seed` | built locally (`tools` profile) | — | One-shot ClickHouse seeder for dashboard demos. |
 
 Bring it up:
 
@@ -21,7 +21,8 @@ docker compose -f deploy/compose/docker-compose.yml logs -f redpanda-init   # co
 ```
 
 Open Grafana at <http://localhost:3000> (admin / admin). The
-ClickHouse datasource is preconfigured. Dashboards land in phase 8.
+ClickHouse datasource and the *SentinelStream — Events* /
+*SentinelStream — Alerts* dashboards are auto-provisioned.
 
 ClickHouse query check:
 
@@ -31,11 +32,3 @@ curl -u sentinel:sentinel \
 # events_enriched
 # alerts
 ```
-
-## What's coming
-- Phase 3: `generator` Python service joins.
-- Phase 4: `ingest` Go service joins, starts producing to `events.raw`.
-- Phase 5: `parser` Rust service joins.
-- Phase 6: `detector` Python service joins.
-- Phase 7: `sink` Go service joins, starts persisting to ClickHouse.
-- Phase 8: dashboards drop into `dashboards/` and auto-load.

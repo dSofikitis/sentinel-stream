@@ -1,11 +1,10 @@
 """Lightweight anomaly detector built on Isolation Forest.
 
-The MVP scores each event independently from a small numeric feature
-vector. It's deliberately simple — the goal is to demonstrate the
-*integration shape* (online scoring next to Sigma rules), not to
-ship a production-quality detector. Anything more ambitious
-(autoencoders, sliding-window features) slots behind the same
-``Anomaly.score`` API.
+Each event is scored independently from a small numeric feature
+vector — deliberately simple, so reviewers can read the entire
+scorer. Anything more ambitious (autoencoders, sliding-window
+features) slots behind the same ``Anomaly.score`` API without
+changing callers.
 """
 
 from __future__ import annotations

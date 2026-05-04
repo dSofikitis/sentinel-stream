@@ -1,6 +1,6 @@
--- SentinelStream ClickHouse schema (phase 2)
--- The sink writes events.enriched and alerts payloads here. Grafana
--- reads from these tables. Materialized views can be added later.
+-- SentinelStream ClickHouse schema.
+-- The sink writes events.enriched and alerts payloads here; Grafana
+-- reads from these tables.
 
 CREATE TABLE IF NOT EXISTS sentinel.events_enriched
 (

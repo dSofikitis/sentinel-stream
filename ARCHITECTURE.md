@@ -63,11 +63,18 @@ alert per detection. Carries the matched rule id (Sigma) or model name
   (e.g. SigNoz, OpenObserve, Uptrace), so the Grafana dashboards
   translate to real-world setups.
 
-## Out of scope (v0.1)
+## Design choices and extension points
 
-- Kubernetes manifests / Helm chart — Compose for the MVP, K8s
-  deferred to v0.2.
-- C++ parser — Rust covers the systems-language signal.
-- Webhook / Slack alerting — alerts log to stdout for the MVP.
-- Trained-on-real-data anomaly model — synthetic feature space is
-  enough to demonstrate the integration.
+- **Compose, not Kubernetes.** The whole stack runs as one
+  `docker compose up`. A Helm chart is a mechanical port — the
+  topic contracts, schemas, and service boundaries don't change.
+- **Rust parser, no C++ port.** Rust covers the systems-language
+  signal at the same memory-safety bar; an additional C++ parser
+  would duplicate the role.
+- **Stdout alerting.** Alerts are emitted as JSON on stdout and
+  persisted via the sink. A webhook / Slack channel is a thin
+  wrapper around the same `Alert` schema.
+- **Synthetic anomaly training corpus.** Isolation Forest fits on
+  a synthetic warmup corpus; swapping in a real-data fit is a
+  one-line change in `Anomaly` since the scorer is hidden behind
+  `Anomaly.score(event)`.

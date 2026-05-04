@@ -41,15 +41,15 @@ generator ─► ingest ─► (events.raw) ─► parser ─► (events.enriche
 | `parser` | Rust | Parses timestamps, classifies, normalizes severity, extracts entity fields; produces `EnrichedEvent`. |
 | `detector` | Python | Sigma rule engine + Isolation Forest anomaly model; emits `Alert`s. |
 | `sink` | Go | Batches `EnrichedEvent`s and `Alert`s into ClickHouse over HTTP `JSONEachRow`. |
-| `demo-seed` | Python (one-shot) | Populates ClickHouse directly so Grafana renders before the v0.2 broker integration lands. |
+| `demo-seed` | Python (one-shot) | Populates ClickHouse directly with realistic enriched events + alerts so Grafana renders without running the full streaming pipe. |
 
 Backbone: **Redpanda** (Kafka API), **ClickHouse**, **Grafana** with
 two pre-baked dashboards (Events + Alerts).
 
-## Status (v0.1)
+## Running the pipeline
 
-Everything below works today. The pipeline can run **as a Unix
-pipe** (no broker required) for local development:
+The pipeline runs **as a Unix pipe** (no broker required) for local
+development and CI:
 
 ```bash
 sentinel-generator --dry-run --rate 50 --duration 5 --inject brute_force_ssh \
@@ -59,11 +59,13 @@ sentinel-generator --dry-run --rate 50 --duration 5 --inject brute_force_ssh \
 ```
 
 Each stage is an independent binary with its own tests and
-Dockerfile. The Compose stack stands up Redpanda + ClickHouse +
-Grafana alongside the `ingest` HTTP service. The Kafka-backed
-consumer/producer wiring on `parser`, `detector`, and `sink` lands
-in v0.2; for now `make seed-grafana` populates ClickHouse via the
-`demo-seed` one-shot so the dashboards have something to render.
+distroless Dockerfile. The Compose stack stands up Redpanda +
+ClickHouse + Grafana alongside the `ingest` HTTP service; the
+broker contracts (`events.raw`, `events.enriched`, `alerts`) are
+already declared in `schemas/` and the topics are created by
+`redpanda-init`. For dashboard demos that don't need the live
+stream, `make seed-grafana` populates ClickHouse directly via the
+`demo-seed` one-shot.
 
 ## Quickstart
 

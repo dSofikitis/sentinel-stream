@@ -20,28 +20,26 @@ rest of the pipeline is IO-bound.
 4. Lifts `host`, `user`, `src_ip`, `dst_ip`, `src_port`, `dst_port`
    from the raw payload onto the top-level enriched record.
 5. Stamps `parser_version`.
-6. Attaches an empty `geo` placeholder when `src_ip` is present —
-   filled in by a follow-up GeoIP enrichment phase.
+6. Attaches an empty `geo` slot when `src_ip` is present so
+   downstream consumers can rely on the field's existence; a real
+   MMDB-backed lookup is a one-line addition behind the same
+   `enrich` API.
 
 ## Run it
 
-The MVP wraps `enrich::enrich` in a stdin → stdout loop so the
-pipeline can be tested as a Unix pipe before Kafka wiring lands:
+The binary is a stdin → stdout filter, which is enough to run the
+whole pipeline as a Unix pipe:
 
 ```bash
 cargo run --quiet --release < ../../data/sample-events.jsonl > /tmp/enriched.jsonl
 ```
 
-End-to-end with the generator (no Kafka required):
+End-to-end with the generator:
 
 ```bash
 sentinel-generator --dry-run --rate 100 --duration 5 --seed 1 \
   | cargo run --quiet --release --manifest-path services/parser/Cargo.toml
 ```
 
-## What's coming
-
-- Real Redpanda consumer/producer wrapping the same `enrich` function
-  (so the binary can run as a service inside the Compose stack).
-- GeoIP enrichment via a checked-in MMDB or a separate enrichment
-  service.
+The `enrich::enrich` function is the unit a Kafka consumer/producer
+wraps when running against the live broker.

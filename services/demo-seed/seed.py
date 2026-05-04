@@ -1,15 +1,13 @@
 """Populate ClickHouse with realistic-looking enriched events + alerts
-*without* the Kafka-backed pipeline.
+without running the full streaming pipe.
 
 Runs the actual generator + detector module logic in-process, applies
-a Python re-implementation of the parser's enrichment (the Rust
-binary needs a Kafka backend before it joins the live stack), and
-batch-inserts both `events_enriched` and `alerts` into ClickHouse via
-HTTP `JSONEachRow`.
+a small Python re-implementation of the parser's enrichment so the
+seeder stays self-contained, and batch-inserts both `events_enriched`
+and `alerts` into ClickHouse via HTTP `JSONEachRow`.
 
 Used as the `demo-seed` one-shot in the Compose `tools` profile so
-Grafana has something to render before the v0.2 broker integration
-lands.
+reviewers see populated Grafana dashboards immediately.
 """
 
 from __future__ import annotations
